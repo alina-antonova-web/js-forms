@@ -137,6 +137,88 @@ $(document).ready(function() {
 
 	}());
 
+
+	(function(){
+
+		var formRegistrationValidation = {
+
+			isValid: true,
+
+			init: function(){
+				// вызов внутренних функций
+				this._setUpListeners();
+			},
+
+			_setUpListeners: function(){
+				$('#submitRegistrationForm').on('click', formRegistrationValidation._validateForm );
+
+				var inputs = $("#registrationForm").find('input');
+				$.each(inputs, function(index, val){
+					var input = $(val);
+					// Hide errors
+					input.on('focus', function(){
+						$(".show-error").removeClass('show-error');
+					});
+					input.on('keydown', function(){
+						$(".show-error").removeClass('show-error');
+					});
+					input.on('change', function(){
+						$(".show-error").removeClass('show-error');
+					});	
+				});
+
+				
+			},
+
+			_validateForm: function(event){
+				event.preventDefault();
+				var form = $("#registrationForm"),
+					email = $("#email").val().trim(),
+					password = $("#password").val().trim(),
+					validEmail = "mail@mail.com",
+					pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+					valid = true;
+
+				//Check email
+				if ( email.length === 0 ) {
+					// Show errors
+					$("#emptyEmail").addClass('show-error');
+					console.log('Email is empty');
+					valid = false;
+				} else if ( !pattern.test( email ) ) {
+					// Show errors
+					$("#errorEmail").addClass('show-error');
+					console.log('Email is INVALID');
+					valid = false;
+  				}  else if ( email === validEmail ) {    //Check occupied Email
+					// Show errors
+					$(".wrongEmail").addClass('show-error');
+					console.log('Occupied email');
+					valid = false;
+				} else {
+  					console.log('Email is VALID');
+  					$(".show-error").removeClass('show-error');
+  					//Check password
+					if ( password.length === 0 ) {
+						// Show errors
+						$("#emptyPassword").addClass('show-error');
+						console.log('Password is empty');
+						valid = false;
+					}
+				}		
+
+				
+				if ( valid === true ) {
+					console.log('Sending form!');
+					form.submit();
+				}
+			}
+		};
+
+		formRegistrationValidation.init();
+
+	}());
+
 });
 
 
